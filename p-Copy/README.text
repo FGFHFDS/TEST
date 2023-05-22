@@ -1,0 +1,18 @@
+   
+   ****   هذا الكود ضعه في كل صفحة لمعرفة تحقق العمليه  ****
+      if (mysqli_query($con, $SQLupdate)) {
+        echo "<script>alert('تم تحديث البيانات بنجاح!'); window.location.href = window.location.href;</script>";
+    } else {
+        echo "<script>alert('حدث خطأ أثناء تحديث البيانات');</script>";
+    }
+
+    <html lang="ar" dir="rtl">
+
+
+                <!-- <form id="updateForm" method="post">
+                    <input type="hidden" name="StudentName" value="<?php echo $name; ?>">
+                    <input type="text" name="LastHomeWork" placeholder="تحديث الوظيفة">
+                    <input type="text" name="LastHadeth" placeholder="تحديث الحديث">
+                    <input type="number" name="NumberOfSoar" placeholder=" عدد السور ">
+                    <input class="Login" type="submit" name="Up" value="تحديث">
+                </form> -->
