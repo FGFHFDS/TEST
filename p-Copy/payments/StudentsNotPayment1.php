@@ -119,43 +119,43 @@ if (isset($_POST['logout'])) {
 
 
         <?php
-
+        $GroubNumber = $_POST['GroubNumber'];
         $monthNum = $_POST['monthNum'];
         $month;
         switch ($monthNum) {
             case 1:
-                $month = "1_23";
+                $month = "01_23";
                 break;
 
             case 2:
-                $month = "2_23";
+                $month = "02_23";
                 break;
 
             case 3:
-                $month = "3_23";
+                $month = "03_23";
                 break;
 
             case 4:
-                $month = "4_23";
+                $month = "04_23";
                 break;
 
             case "5":
-                $month = "5_23";
+                $month = "05_23";
                 break;
 
             case 6:
-                $month = "6_23";
+                $month = "06_23";
                 break;
 
             case 7:
-                $month = "7_23";
+                $month = "07_23";
                 break;
             case 8:
-                $month = "8_23";
+                $month = "08_23";
                 break;
 
             case 9:
-                $month = "9_23";
+                $month = "09_23";
                 break;
 
             case 10:
@@ -173,8 +173,33 @@ if (isset($_POST['logout'])) {
             default:
                 header("Location: StudentsNotPayment1.php");
         }
+
+        $WhatGroub;
+        $paymentsNum;
+        switch ($GroubNumber) {
+            case 1:
+                $WhatGroub = "squad1";
+                $paymentsNum = "payments1";
+                break;
+            case 2:
+                $WhatGroub = "squad2";
+                $paymentsNum = "payments2";
+
+                break;
+            case 3:
+                $WhatGroub = "squad3";
+                $paymentsNum = "payments3";
+                break;
+
+            default:
+                header("Location: StudentsNotPayment1.php");
+        }
+
+
         echo "<h1> $month :  جدول للذين لم يدفعو في</h1>;" ?>
         <form method="POST" action="StudentsNotPayment2.php">
+            <input type='hidden' name='paymentsNum' value="<?php echo $paymentsNum; ?>">
+            <input type='hidden' name='month' value="<?php  echo $month; ?>">
             <table>
                 <thead>
                     <tr>
@@ -198,63 +223,35 @@ if (isset($_POST['logout'])) {
                     }
 
 
-                    $GroubNumber = $_POST['GroubNumber'];
-
                     $massagePayments = mysqli_query($conn, "SELECT massagePayments FROM massges");
-
-
-                    $WhatGroub;
-                    $paymentsNum;
-                    switch ($GroubNumber) {
-                        case 1:
-                            $WhatGroub = "squad1";
-                            $paymentsNum = "payments1";
-                            break;
-                        case 2:
-                            $WhatGroub = "squad2";
-                            $paymentsNum = "payments2";
-
-                            break;
-                        case 3:
-                            $WhatGroub = "squad3";
-                            $paymentsNum = "payments3";
-                            break;
-
-                        default:
-                            header("Location: StudentsNotPayment1.php");
-                    }
 
                     // استدعاء أسماء الطلاب
                     $result = mysqli_query($conn, "SELECT $paymentsNum.studentName, $WhatGroub.frNo, $WhatGroub.motherNo FROM $paymentsNum JOIN $WhatGroub ON $paymentsNum.studentName = $WhatGroub.studentName WHERE $paymentsNum.$month = 'لم يدفع' ");
 
+                    // Fetch the message payment from the database
+                    $massagePaymentRow = mysqli_fetch_assoc($massagePayments);
+                    $massagePaymentText = $massagePaymentRow['massagePayments'];
 
-                    
-                        // Fetch the message payment from the database
-                        $massagePaymentRow = mysqli_fetch_assoc($massagePayments);
-                        $massagePaymentText = $massagePaymentRow['massagePayments'];
+                    while ($row = $result->fetch_assoc()) {
+                        $studentName = $row["studentName"];
+                        $frNo = $row["frNo"];
+                        $motherNo = $row["motherNo"];
+                        echo "<tr>";
+                        echo "<td>" . $studentName . "</td>";
+                        echo "<td><input type='checkbox' name='payments[" . $studentName . "]' value='دفع'></td>";
+                        echo "<td>";
+                        echo "<button class='bt'>";
+                        // Replace the variable $massagePayments with the actual value $massagePaymentText
+                        echo '<a href="http://api.whatsapp.com/send?phone=972' . $frNo . '&text=' . $massagePaymentText . $month . '&type=phone_number&app_absent=0" class="wa_btn"> ارسال الى الاب </a>';
+                        echo "</button>";
+                        echo "<button class='bt'>";
+                        // Replace the variable $massagePayments with the actual value $massagePaymentText
+                        echo '<a href="http://api.whatsapp.com/send?phone=972' . $motherNo . '&text=' . $massagePaymentText . $month . '&type=phone_number&app_absent=0" class="wa_btn">ارسال الى الام </a>';
+                        echo "</button>";
+                        echo "</td>";
+                        echo "</tr>";
+                    }
 
-                        while ($row = $result->fetch_assoc()) {
-                            $studentName = $row["studentName"];
-                            $frNo = $row["frNo"];
-                            $motherNo = $row["motherNo"];
-                            echo "<input type='hidden' name='paymentsNum' value=". $paymentsNum .">";
-                            echo "<input type='hidden' name='month' value=". $month .">";
-                            echo "<tr>";
-                            echo "<td>" . $studentName . "</td>";
-                            echo "<td><input type='checkbox' name='payments[" . $studentName . "]' value='دفع'></td>";
-                            echo "<td>";
-                            echo "<button class='bt'>";
-                            // Replace the variable $massagePayments with the actual value $massagePaymentText
-                            echo '<a href="http://api.whatsapp.com/send?phone=972' . $frNo . '&text=' . $massagePaymentText . $month .'&type=phone_number&app_absent=0" class="wa_btn"> ارسال الى الاب </a>';
-                            echo "</button>";
-                            echo "<button class='bt'>";
-                            // Replace the variable $massagePayments with the actual value $massagePaymentText
-                            echo '<a href="http://api.whatsapp.com/send?phone=972' . $motherNo . '&text=' . $massagePaymentText . $month .'&type=phone_number&app_absent=0" class="wa_btn">ارسال الى الام </a>';
-                            echo "</button>";
-                            echo "</td>";
-                            echo "</tr>";
-                        }
-                    
                     ?>
                 </tbody>
             </table>

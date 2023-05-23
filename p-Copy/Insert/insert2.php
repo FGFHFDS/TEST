@@ -34,6 +34,7 @@ $attendanceNum;
 $paymentsNum;
 $CountStudents = 0;
 
+
 switch ($GroubNumber) {
     case 1:
         $WhatGroub = "squad1";
@@ -53,7 +54,7 @@ switch ($GroubNumber) {
         break;
 
     default:
-    header("Location: insert1.php");
+        header("Location: insert1.php");
 }
 
 // mysqli_set_charset($con, "utf8");
@@ -65,19 +66,18 @@ $sql = "insert into $WhatGroub (studentName ,studentID ,dateRegistration ,frNo ,
     ('" . $studentName . "','" . $studentID . "', '" . $Date . "' , '" . $frNo . "' , '" . $motherNo . "',  '" . $birthDate . "');";
 
 mysqli_query($conn, "insert into $attendanceNum (studentName) values ('$studentName');");
-mysqli_query($conn, "insert into $paymentsNum (studentName) values ('$studentName');");//*** */
+mysqli_query($conn, "insert into $paymentsNum (studentName,01_23, 02_23 ,03_23, 04_23, 05_23, 06_23, 07_23, 08_23, 09_23, 10_23, 11_23, 12_23) values ('$studentName','لم يدفع','لم يدفع','لم يدفع','لم يدفع','لم يدفع','لم يدفع','لم يدفع','لم يدفع','لم يدفع','لم يدفع','لم يدفع','لم يدفع');"); //*** */
 
 
 if (mysqli_query($conn, $sql)) {
 
-    $CountStudents++;
-    $resultCounts = mysqli_query($conn, "SELECT CountStudents FROM `temp`");
-	$row = mysqli_fetch_assoc($resultCounts);
+    $resultCounts = mysqli_query($conn, "SELECT CountStudents FROM `temp`;");
+    $row = mysqli_fetch_assoc($resultCounts);
 
 
-	$SumCountStudents = $row['CountStudents'];
-	$SumCountStudents += $CountStudents;
-	mysqli_query($conn, "UPDATE `temp` SET  CountStudents ='$SumCountStudents';");
+    $SumCountStudents = $row['CountStudents'];
+    $SumCountStudents++;
+    mysqli_query($conn, "UPDATE `temp` SET  CountStudents ='$SumCountStudents';");
     header("Location: insert1.php");
 } else {
 

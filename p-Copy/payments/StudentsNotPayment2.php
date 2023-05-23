@@ -28,8 +28,6 @@ if (isset($_POST['save'])) {
 	$CountPayment = 0;
 	$paymentsNum = $_POST['paymentsNum'];
 	$month = $_POST['month'];
-	// $sqlDate = "ALTER TABLE $paymentsNum ADD $month VARCHAR(255) NOT NULL;";
-	mysqli_query($conn, $sqlDate);
 
 
 
@@ -43,13 +41,16 @@ if (isset($_POST['save'])) {
 
 	if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		$payments = $_POST["payments"];
+
 		foreach ($payments as $studentName => $status) {
 			if ($status === "دفع") {
-				$sumPayment = $sumPayment + 1;
-			} else {
-				$sumNotPayment = $sumNotPayment + 1;
-			}
-			$sql = "UPDATE $paymentsNum SET  $month ='$status' WHERE studentName = '$studentName';";
+				$sumNotPayment--;
+				$sumPayment++;
+				mysqli_query($conn, "UPDATE temp SET CountPayment ='$sumPayment';");
+
+			} 
+
+			$sql = "UPDATE $paymentsNum SET $month ='$status' WHERE studentName = '$studentName';";
 			if ($conn->query($sql) !== TRUE) {
 				echo "Error: " . $sql . "<br>" . $conn->error;
 			}
@@ -58,43 +59,14 @@ if (isset($_POST['save'])) {
 		
 	
 
+	}else{
+		echo "hi";
 	}
-	mysqli_query($conn, "UPDATE temp SET CountPayment ='$sumPayment', CountNotPayment = '$sumNotPayment';");
 	
 	header('Location: ../index.php');
 	exit();
 	
-	// // حفظ بيانات الدفع في قاعدة البيانات
-	// if ($_SERVER["REQUEST_METHOD"] == "POST") {
-	// 	$payments = $_POST["payments"];
 
-	// 	foreach ($payments as $studentName => $status) {
-
-
-	// 		if ($status === "دفع") {
-	// 			$CountPayment++;
-	// 		}else {
-	// 			$CountNotPayment++;
-	// 		}
-
-	// 		$sql = "UPDATE $paymentsNum SET  $date ='$status' WHERE studentName = '$studentName';";
-	// 		if ($conn->query($sql) !== TRUE) {
-	// 			echo "Error: " . $sql . "<br>" . $conn->error;
-	// 		}
-	// 	}
-	// }
-	// header('Location: ../index.php');
-
-	// $resultCounts = mysqli_query($conn, "SELECT CountPayment,CountNotPayment FROM `temp`");
-	// $row = mysqli_fetch_assoc($resultCounts);
-
-	// $sumPayment = $row['CountPayment'];
-	// $sumPayment += $CountPayment;
-	// $row1 = mysqli_fetch_assoc($resultCounts);
-	// $sumNotPayment = $row['CountNotPayment'];
-	// $sumNotPayment += $CountNotPayment;
-	// mysqli_query($conn, "UPDATE `temp` SET CountPayment ='$sumPayment', CountNotPayment = '$sumNotPayment';");
-	
 }
 		
 // إعادة التوجيه إلى صفحة النتائج

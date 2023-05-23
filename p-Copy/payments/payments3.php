@@ -24,7 +24,7 @@ if (isset($_POST['save'])) {
 		die("Connection failed: " . $conn->connect_error);
 	}
 
-	$date = date("m_Y");
+	$date = date("m_y");
 	$CountNotPayment = 0;
 	$CountPayment = 0;
 	$paymentsNum = $_POST['paymentsNum'];

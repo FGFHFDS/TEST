@@ -50,8 +50,15 @@ $id = $row['id'];
 $sql = "DELETE FROM $WhatGroub WHERE id = '$id' "; 
 
 if (mysqli_query($con, $sql)) {
-    // header("Location: Delete1.php");
+    $resultCounts = mysqli_query($conn, "SELECT CountStudents FROM `temp`");
+	$row = mysqli_fetch_assoc($resultCounts);
+
+
+	$SumCountStudents = $row['CountStudents'];
+	$SumCountStudents--;
+	mysqli_query($conn, "UPDATE `temp` SET  CountStudents ='$SumCountStudents';");
     echo " <h2> تم الطرد </h2>  ";
+    
 } else
     echo "Failed";
 ?>
